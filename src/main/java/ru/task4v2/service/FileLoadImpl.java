@@ -2,7 +2,7 @@ package ru.task4v2.service;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import ru.task4v2.repo.FileLoader;
+import ru.task4v2.repo.Loader;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -14,7 +14,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 
 // загрузка данных из файлов указанного в настройке каталога (spring.application.pathInput) в List
 @Component
-public class FileLoadImpl implements FileLoader {
+public class FileLoadImpl implements Loader {
 
     private String pathInput;
 
@@ -24,7 +24,7 @@ public class FileLoadImpl implements FileLoader {
     }
 
     @Override
-    public List<String> fileLoad() {
+    public List<String> load() {
         List<String> res = new ArrayList<>();
         File file = new File(pathInput);
         File[] files = file.listFiles();

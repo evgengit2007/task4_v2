@@ -4,8 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import ru.task4v2.model.ParseString;
-import ru.task4v2.repo.FileLoader;
-import ru.task4v2.repo.FileTransformer;
+import ru.task4v2.repo.Loader;
+import ru.task4v2.repo.Transformer;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -22,12 +22,12 @@ import java.util.List;
 // возвращает массив строк с нормализированной датой и выброшены строки заголовки,
 // строки с пустым или несоответствующим формату значением даты входа перемещены в файл с ошибками
 @Component
-public class FileTransformerImpl implements FileTransformer {
+public class FileTransformerImpl implements Transformer {
 
     private String pathErrOutput;
 
     @Autowired
-    FileLoader fl;
+    Loader fl;
 
     public FileTransformerImpl(@Value("${spring.application.pathOutput}") String path) {
         this.pathErrOutput = path;
@@ -39,7 +39,7 @@ public class FileTransformerImpl implements FileTransformer {
         List<String> err = new ArrayList<>();
         Timestamp dt;
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss[.SSS]");
-        for (String str : fl.fileLoad()) {
+        for (String str : fl.load()) {
             // проверить наличие даты, если нет, то запись помещается в лог файл с ошибкой
             // полученный результат кладем в res
 //            System.out.println(str);

@@ -7,9 +7,13 @@ import org.springframework.cglib.proxy.MethodInterceptor;
 import org.springframework.cglib.proxy.MethodProxy;
 import org.springframework.stereotype.Component;
 
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Calendar;
 
@@ -29,18 +33,29 @@ public class LogTransHandler implements BeanPostProcessor {
             public Object intercept(Object obj, Method method, Object[] args, MethodProxy proxy) throws Throwable {
                 String logFileName = (bean.getClass().getAnnotation(LogTransformation.class)).logName();
 //                System.out.println("logFileName: " + logFileName);
-                FileWriter fw = new FileWriter(logFileName, true);
-                fw.write("Bean: " + beanName + ", Method: " + method + ", DateTime: " + Calendar.getInstance().getTime() + "\n");
-                Object result = method.invoke(bean, args);
-                Object[] objects = Arrays.stream(args).toArray();
-                for (int i = 0; i < objects.length; i++) {
-                    fw.write("args[" + i + "]: " + objects[i].getClass() + " = " + objects[i].toString() + "\n");
+                // получим каталог без файла
+                int index = logFileName.lastIndexOf("/");
+                StringBuilder stringBuilder = new StringBuilder(logFileName);
+                stringBuilder.delete(index, stringBuilder.length());
+//                System.out.println(stringBuilder.toString());
+                Path dirPath = Paths.get(stringBuilder.toString());
+                try {
+                    Files.createDirectories(dirPath);
+                    FileWriter fw = new FileWriter(logFileName, true);
+                    fw.write("Bean: " + beanName + ", Method: " + method + ", DateTime: " + Calendar.getInstance().getTime() + "\n");
+                    Object result = method.invoke(bean, args);
+                    Object[] objects = Arrays.stream(args).toArray();
+                    for (int i = 0; i < objects.length; i++) {
+                        fw.write("args[" + i + "]: " + objects[i].getClass() + " = " + objects[i].toString() + "\n");
+                    }
+                    if (result != null) {
+                        fw.write("Result: " + result.toString() + "\n");
+                    }
+                    fw.close();
+                    return result;
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
                 }
-                if (result != null) {
-                    fw.write("Result: " + result.toString() + "\n");
-                }
-                fw.close();
-                return result;
             }
         });
         Constructor cons = bean.getClass().getConstructors()[0];

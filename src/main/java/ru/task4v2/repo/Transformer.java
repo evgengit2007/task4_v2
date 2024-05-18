@@ -4,6 +4,6 @@ import ru.task4v2.model.ParseString;
 
 import java.util.List;
 
-public interface FileTransformer {
+public interface Transformer {
     List<ParseString> prepareList();
 }

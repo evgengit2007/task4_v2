@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 import ru.task4v2.model.ParseString;
 import ru.task4v2.repo.Checker;
 import ru.task4v2.repo.DataWriter;
-import ru.task4v2.repo.FileTransformer;
+import ru.task4v2.repo.Transformer;
 
 import java.util.List;
 
@@ -13,7 +13,7 @@ import java.util.List;
 public class Conveyer {
 
     @Autowired
-    FileTransformer ft;
+    Transformer ft;
 
     @Autowired
     DataWriter dw;
