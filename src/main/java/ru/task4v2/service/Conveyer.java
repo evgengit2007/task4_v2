@@ -11,8 +11,6 @@ import java.util.List;
 
 @Component
 public class Conveyer {
-//    @Autowired
-//    FileLoader fl; // вычитываем строки из файла
 
     @Autowired
     FileTransformer ft;

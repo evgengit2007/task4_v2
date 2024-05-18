@@ -39,8 +39,10 @@ public class FileLoadImpl implements FileLoader {
 //                    res.add(res.size(), sc.nextLine());
 //                }
                 // --> вариант1
+                // --< вариант 2
                 List<String> lines = Files.readAllLines(Paths.get(fl.toString()), UTF_8);
                 res.addAll(res.size(), lines);
+                // --> вариант 2
             } catch (Exception e) {
                 System.out.println("Ошибка при чтении файла " + e);
                 continue;
